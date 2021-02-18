@@ -1,0 +1,15 @@
+.body {
+    margin: auto;
+    display: flexbox;
+}
+
+.canvas
+{
+    margin: auto;
+    background-color: aqua;
+}
+
+.score
+{
+    background-color: blueviolet;
+}
