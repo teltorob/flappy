@@ -17,11 +17,11 @@ class Obstruction
 
     }
 
-    world = new World(10,1);
+    //world= new World ();
 
-    generate () {
+    generate (world) {
         console.log("generate func called");
-        console.log(this.width);
+       // console.log(this.width);
 
     const up_y_start = 0;
     var up_y_end =this.y-(this.gap/2);
@@ -29,12 +29,13 @@ class Obstruction
     var down_y_start = this.y+(this.gap/2);
     const down_y_end =canvas.width;
 
-    var speed=1;
-
+    var speed=2;
+     
 
     var move =setInterval( ()=> {
-             //console.log(this.x);
+            // console.log("draw reached");
 
+            check();
              ctx.clearRect(this.x,down_y_start,this.width,down_y_end);
              ctx.clearRect(this.x,up_y_start,this.width,up_y_end);
 
@@ -44,62 +45,35 @@ class Obstruction
              ctx.fillRect(this.x,up_y_start,this.width,up_y_end);
              ctx.fillRect(this.x,down_y_start,this.width,down_y_end);
              
-             if (this.x>500)
+             if (this.x==500)
              {
-                 this.world.generate_poles();
+                 world.generate_poles();
              }
              if(this.x==(-this.width))
              {
                  clearInterval(move);
              }
 
-             },20)
+             },24)
     console.log('done');
 
 }
 
 }
 
-
-
-
-
-
-
-function play()
-{
-    var world= new World (10,1);
-    world.generate_poles();
-   // while (gameState)
-   // { 
-   // }
-}
-
-
-
-function start_game ()
-{
-    //code here to start the game
-    if(!gameState)
-     {gameState=true;
-      ctx.clearRect(0,0,canvas.width, canvas.height);
-      play();}
-
-}
+//function start_game ()
+//{
+//    //code here to start the game
+//    if(!gameState)
+//     {gameState=true;
+//      ctx.clearRect(0,0,canvas.width, canvas.height);
+//      play();}
+//
+//}
 
 class World 
 {
-    poleX=0;
-    
-    constructor(gravity, level)
-    {
-        this.gravity=gravity;
-        this.level=level;
-    }
-
-
-    
-
+    pole=null;
     generate_ground()
     {
         const floorHeight= 20;
@@ -109,82 +83,103 @@ class World
 
     generate_poles()
     {
-
-       /*console.log("generate poles called");
-       console.log(numberOfObstruction);
-       console.log(canvas.width);
-       console.log(gapBetweenObstruction);*/
-
-
         x = 950; //keeps adding the distance between object
         y = 80 + Math.floor(Math.random() * 340); //randomly generates where the midpoint of gap will lie
         console.log(x,y);
         let pole = new Obstruction (x, y, gap);
         pole.generate();
-        console.log("Pole created");
+
+        this.pole= pole;
+       // console.log("Pole created");
+    }
+
+    generate_world()
+    {
+        console.log("Generating World");
+        if(gameState)
+        {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            this.generate_poles();
     
-
-
-
+        }
 
     }
 }
 
-class Bird
-{
-    constructor(length, breadth, mass, initialX, initialY)
-    {
-        this.length= length;
-        this.breadth= breadth;
-        this.mass=mass;
-        this.initialX=initialX;
-        this.initialY=initialY;
-    }
+class Bird {
+  constructor() {
+    this.currentX = 200;
+    this.currentY = 150;
+    this.targetX = 0;
+    this.targetY = 400;
+    this.check = false;
+    //this.gameOn = false;
+  }
+  render() {
+    this.targetY = 400;
 
-    posX =0;
-    posY =0;
-    initialVelocity=0;
+    let dy = 6;
+    let move = setInterval(() => {
+      if (
+        this.currentY == this.targetY ||
+        (this.currentY <= this.targetY && dy < 0)
+      ) {
+        clearInterval(move);
+        this.render();
+      }
 
-    render()
-    {
-        console.log(gravity);
-        this.posX = this.initialX;
-        this.posY= this.initialY;
-        ctx.fillStyle= "orange";
-        ctx.fillRect(posX, posY, this.breadth, this.length);
+      if (this.currentY >= 400) {
+        clearInterval(move);
+      }
+      ctx.clearRect(this.currentX, this.currentY, 40, 40);
 
-    }
+      if (this.currentY > this.targetY && this.check) {
+          dy = -10;
+          this.check = false;
+        }
+        
+        this.currentY += dy;
+        
+      ctx.fillStyle = "black";
+      ctx.fillRect(this.currentX, this.currentY, 40, 40);
+    }, 24);
+  }
 
-    fly(force)
-    {
-        var acceleration = gravity - (force/this.mass);
-        var velocity= initialVelocity + acceleration*1;
+  space() {
+    this.targetY = this.currentY - 80;
+    this.check = true;
+  }
 
-        var move =setInterval( (force)=> {
-            //console.log(this.x);
-
-            ctx.clearRect(this.posX,this.posY, this.breadth, this.length);
-
-            this.posY += velocity;
-
-            ctx.fillStyle = "orange";
-            ctx.fillRect(this.posX,this.posY, this.breadth, this.length);
-
-            velocity= velocity + (gravity*0.2)
-            if (velocity==0)
-            {
-                clearTimeout(move);
-            }
-
-            if (force>0)
-            { 
-                clearTimeout(move);
-            }
-
-            },20)
-
+//  enter() {
+//    gameState = !gameState;
+//    this.render();
+//  }
+}
+var bird = new Bird();
+var world = new World();
 
 
-    }
+document.addEventListener("keydown", keyDownTextField, false);
+function keyDownTextField(e) {
+    var keyCode = e.keyCode;
+    if (keyCode == 32) {
+        //Space bar pressed
+        bird.space()
+        console.log(bird.currentY)
+        
+    } else if (keyCode == 13) {
+    gameState=!gameState;
+    bird.render();
+    world.generate_world();
+    check();
+
     
+  } else console.log("Enter valid key");
+}
+function check()
+{
+    tempX=world.pole.x;
+    if (tempX==500)
+    console.log("This is poles x coordinate" + world.pole.x);
+
 }
