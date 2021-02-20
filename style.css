@@ -1,3 +1,7 @@
+.* {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
 .canvas {
   display: block;
   margin: auto;
@@ -9,7 +13,8 @@
   width: 30%;
   height: 50px;
   text-align: center;
+  text-justify: center;
   font-size: 30px;
-  background-color: rgb(160, 90, 220);
+  background-color: rgb(214, 207, 221);
 
 }
