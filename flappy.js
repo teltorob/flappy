@@ -1,100 +1,88 @@
 const canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-console.log("canvas spotted");
+
+const scoreBoard = document.getElementById("score")
 var gameState = false;
 var x = 0,
   y = 0;
 var gap = 130;
 
-class Obstruction {
-  constructor(x, y, gap) {
+class Obstruction {  // A class to create the obstruction of the game- poles
+  constructor(x, y, gap) { //The pole needs to have a x coordinate to move on the X axis
     this.width = 100;
     this.x = x;
     this.y = y;
     this.gap = gap;
   }
 
-  //world= new World ();
+  up_y_start = 0;               // Y axis coordinate where the upper pole will start
+  up_y_end = y - gap / 2;       // Y axis coordinate where the pole will end
+                                // Fomula used to account for the gap between the poles
+  down_y_start = y + gap / 2;   // Y axis coordinate where the lower pole will start
+  down_y_end = canvas.height-100;    // Y axis coordinate where the lower pole will end
 
-  up_y_start = 0;
-  up_y_end = y - gap / 2;
-
-  down_y_start = y + gap / 2;
-  down_y_end = canvas.width;
-
+  
   speed = 5;
   generate(world) {
-    if (gameState) {
-      console.log("generate func called");
-      console.log(world);
-
-      //const up_y_start = 0;
-      //var up_y_end = this.y - this.gap / 2;
-      //
-      //var down_y_start = this.y + this.gap / 2;
-      //const down_y_end = canvas.width;
-      //
-      //var speed = 2;
-      //
-      var move = setInterval(() => {
-        //console.log(this.down_y_start);
-
-        check();
-        if (!gameState) clearInterval(move);
-        ctx.clearRect(this.x, this.down_y_start, this.width, this.down_y_end);
+      if (gameState) {
+          
+          var move = setInterval(() => {
+              check(); 
+              if (!gameState) clearInterval(move);// ending a game when its over
+              
+              //code that clears they bitmap 
+              ctx.clearRect(this.x, this.down_y_start, this.width, this.down_y_end-this.down_y_start);
         ctx.clearRect(this.x, this.up_y_start, this.width, this.up_y_end);
 
+        //code to change the x coordinate of the poles, so that it moves.
         this.x -= this.speed;
 
-        ctx.fillStyle = "black";
+        //code to redraw the pole with changed coordinate
+        ctx.fillStyle = "green";
         ctx.fillRect(this.x, this.up_y_start, this.width, this.up_y_end);
-        ctx.fillRect(this.x, this.down_y_start, this.width, this.down_y_end);
+        ctx.fillRect(this.x, this.down_y_start, this.width, this.down_y_end-this.down_y_start);
 
+        //code to generate another pole after a pole has crossed the bird
         if (this.x == 490) {
           world.generate_poles(world);
         }
+
+        //code to clear the setInterval() from the object(pole) that has left the screen
         if (this.x <= -this.width) {
           clearInterval(move);
         }
       }, 24);
-      console.log("done");
     }
   }
 }
 
-//function start_game ()
-//{
-//    //code here to start the game
-//    if(!gameState)
-//     {gameState=true;
-//      ctx.clearRect(0,0,canvas.width, canvas.height);
-//      play();}
-//
-//}
-
 class World {
   pole = null;
   generate_ground() {
-    const floorHeight = 20;
-    ctx.fillStyle = "brown";
-    ctx.fillRect(0, canvas.height - floorHeight, canvas.width, floorHeight);
+    const floorHeight = 100;
+
+    var ground = setInterval(function(){
+        if (!gameState) clearInterval(ground);// ending a game when its over
+        ctx.fillStyle = "brown";
+        ctx.fillRect(0, canvas.height - floorHeight, canvas.width, floorHeight);
+    },24)
+
+
   }
 
-  generate_poles(object) {
-    x = 950; //keeps adding the distance between object
-    y = 80 + Math.floor(Math.random() * 280); //randomly generates where the midpoint of gap will lie
-    //console.log(x, y);
-    this.pole = new Obstruction(x, y, gap);
-    this.pole.generate(object);
+  generate_poles(currentWorld) { 
+    x = 950; //keeps distance between objects
+    y = 80 + Math.floor(Math.random() * 240); //randomly generates where the midpoint of gap will lie
+   
+    this.pole = new Obstruction(x, y, gap); 
+    this.pole.generate(currentWorld);               //generates a pole with random gap location
 
-    // console.log("Pole created");
   }
 
-  generate_world(object) {
-    console.log("Generating World" + object);
+  generate_world(currentWorld) {
     if (gameState) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      this.generate_poles(object);
+      this.generate_ground();
+      this.generate_poles(currentWorld);// generate poles for current world 
     }
   }
 }
@@ -110,11 +98,13 @@ class Bird {
   }
   render() {
     if (gameState) {
-      this.targetY = 400;
-      let dy = 2;
-      let move = setInterval(() => {
-        if (!gameState) clearInterval(move);
+      this.targetY = 400; // where the birds want to go
+      let dy = 2;         //speed of bird
 
+      let move = setInterval(() => {
+        if (!gameState) clearInterval(move); 
+
+        //code to check if the bird has reached the target
         if (
           this.currentY == this.targetY ||
           (this.currentY <= this.targetY && dy < 0)
@@ -123,48 +113,54 @@ class Bird {
           this.render();
         }
 
+        //clear the bitmap for the bird motion
         ctx.clearRect(this.currentX, this.currentY, 40, 40);
 
+        //code to check if a bird wants to go up or down
         if (this.currentY > this.targetY && this.check) {
           dy = -2;
           this.check = false;
         }
 
-        this.currentY += dy;
+        this.currentY += dy; // changes the Y coordinate of the bird
 
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "orange";
         ctx.fillRect(this.currentX, this.currentY, 40, 40);
       }, 6.5);
     }
   }
 
-  space() {
+  space() { // function that makes the bird fly when the space key is pressed
     this.targetY = this.currentY - 50;
     this.check = true;
   }
-
-  //  enter() {
-  //    gameState = !gameState;
-  //    this.render();
-  //  }
 }
-var bird = new Bird();
-var world = new World();
 
-document.addEventListener("keydown", keyDownTextField, false);
-function keyDownTextField(e) {
+
+var world = new World();
+var bird = new Bird();
+
+document.addEventListener("keydown", keyDownTextField, false);//listens to the pressed key
+
+
+function keyDownTextField(e) { // executes command based on the key pressed
   var keyCode = e.keyCode;
   if (keyCode == 32) {
     //Space bar pressed
     bird.space();
-    //  console.log(bird.currentY);
   } else if (keyCode == 13) {
+    //Enter key pressed
+
     gameState = !gameState;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     bird.render();
     world.generate_world(world);
     check();
+    set_score();
   } else console.log("Enter valid key");
 }
+
+
 function check() {
   let poleXStart = world.pole.x - 5;
   let poleXEnd = poleXStart + world.pole.width - 5;
@@ -175,19 +171,26 @@ function check() {
   let birdUpperY = bird.currentY;
   let birdLowerY = bird.currentY + 40;
 
-  if (birdX >= poleXStart && birdX <= poleXEnd) {
-    console.log("Condition 1 applied");
-  }
-
-  if (birdUpperY <= poleUpYEnd) console.log("condition 2 satisfied");
   if (
     (birdX >= poleXStart &&
       birdX <= poleXEnd &&
       (birdLowerY >= poleDownYStart || birdUpperY <= poleUpYEnd)) ||
     birdLowerY >= 420
   ) {
-    //console.log(tempX);
-    console.log("end");
     gameState = false;
   }
+}
+
+function set_score()
+{
+    let scoreRate=20;
+    let score=0;
+    let scoreCounter=setInterval(function(){
+        score ++;
+        scoreBoard.innerText=score;
+
+        if(!gameState)clearInterval(scoreCounter);
+        
+
+    },scoreRate)
 }

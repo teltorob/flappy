@@ -5,5 +5,11 @@
 }
 
 .score {
-  background-color: blueviolet;
+  margin:auto;
+  width: 30%;
+  height: 50px;
+  text-align: center;
+  font-size: 30px;
+  background-color: rgb(160, 90, 220);
+
 }
