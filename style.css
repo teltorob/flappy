@@ -1,15 +1,9 @@
-.body {
-    margin: auto;
-    display: flexbox;
+.canvas {
+  display: block;
+  margin: auto;
+  background-color: aqua;
 }
 
-.canvas
-{
-    margin: auto;
-    background-color: aqua;
-}
-
-.score
-{
-    background-color: blueviolet;
+.score {
+  background-color: blueviolet;
 }

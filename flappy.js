@@ -166,8 +166,8 @@ function keyDownTextField(e) {
   } else console.log("Enter valid key");
 }
 function check() {
-  let poleXStart = world.pole.x;
-  let poleXEnd = poleXStart + world.pole.width;
+  let poleXStart = world.pole.x - 5;
+  let poleXEnd = poleXStart + world.pole.width - 5;
   let poleUpYEnd = world.pole.up_y_end;
   let poleDownYStart = world.pole.down_y_start;
 
