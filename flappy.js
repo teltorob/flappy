@@ -152,12 +152,19 @@ function keyDownTextField(e) { // executes command based on the key pressed
     //Enter key pressed
 
     gameState = !gameState;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    bird.render();
-    world.generate_world(world);
-    check();
-    set_score();
+    main();
   } else console.log("Enter valid key");
+}
+
+function main()
+{if(gameState)
+  {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bird.render();
+  world.generate_world(world);
+  check();
+  set_score();
+  }
 }
 
 
