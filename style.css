@@ -3,18 +3,35 @@
 }
 
 .canvas {
+  position: relative;
   display: block;
   margin: auto;
   background-color: aqua;
+  z-index: 1;
 }
 
 .score {
   margin:auto;
+  /*position: absolute;*/
   width: 30%;
   height: 50px;
   text-align: center;
   text-justify: center;
   font-size: 30px;
   background-color: rgb(214, 207, 221);
+  z-index: 1;
+}
 
+.block
+{
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 900px;
+  height: 500px;
+  opacity: 0.4;
+  background-color: black;
+  color: bisque;
+  z-index: 2;
 }
