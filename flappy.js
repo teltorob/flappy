@@ -11,6 +11,10 @@ var x = 0,
   y = 0;
 var gap = 110;
 
+const highScoreBoard= document.getElementById("highScoreBoard");
+
+var highScore=0
+
 const initialBirdPos = 150;
 
 class Obstruction {
@@ -203,7 +207,10 @@ function check() {
   ) {
     gameState = false;
   }
+
+  
 }
+
 
 function set_score() {
   let scoreRate = 20;
@@ -211,6 +218,8 @@ function set_score() {
   let scoreCounter = setInterval(function () {
     score++;
     scoreBoard.innerText = score;
+    highScore= Math.max(highScore,score);
+    highScoreBoard.innerText= highScore;
 
     if (!gameState) clearInterval(scoreCounter);
   }, scoreRate);

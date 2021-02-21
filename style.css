@@ -31,6 +31,18 @@
   z-index: 1;
 }
 
+.high-score
+{
+  display: block;
+  margin:auto;
+  width: 30%;
+  height: 50px;
+  text-align: center;
+  font-size: 30px;
+  background-color: rgb(196, 142, 172);
+  z-index: 1;
+}
+
 .block
 {
   margin:auto;
@@ -44,4 +56,12 @@
   background-color: black;
   color: bisque;
   z-index: 2;
+}
+
+
+.score-container
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
