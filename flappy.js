@@ -1,5 +1,9 @@
+const body=document.body;
+
 const canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+
+const block= document.getElementById("block");
 
 const scoreBoard = document.getElementById("score");
 var gameState = false;
@@ -30,8 +34,9 @@ class Obstruction {
     if (gameState) {
       var move = setInterval(() => {
         check();
-        if (!gameState) clearInterval(move); // ending a game when its over
+        if (!gameState) {clearInterval(move);    body.insertBefore(block,canvas);
 
+        } // ending a game when its over
         //code that clears they bitmap
         ctx.clearRect(
           this.x,
@@ -171,8 +176,12 @@ function main() {
     bird.currentY = initialBirdPos;
     bird.render();
     world.generate_world(world);
+    block.remove();
     check();
     set_score();
+  }
+  else{
+    body.insertBefore(block,canvas);
   }
 }
 
