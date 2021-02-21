@@ -1,5 +1,13 @@
 .body {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+}
+
+.block-container
+{
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .canvas {
@@ -7,16 +15,17 @@
   display: block;
   margin: auto;
   background-color: aqua;
+  width: 900px;
+  height: 500px;
   z-index: 1;
 }
 
 .score {
+  display: block;
   margin:auto;
-  /*position: absolute;*/
   width: 30%;
   height: 50px;
   text-align: center;
-  text-justify: center;
   font-size: 30px;
   background-color: rgb(214, 207, 221);
   z-index: 1;
@@ -24,6 +33,7 @@
 
 .block
 {
+  margin:auto;
   display: flex;
   position: absolute;
   align-items: center;

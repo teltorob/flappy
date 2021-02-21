@@ -1,4 +1,4 @@
-const body=document.body;
+const blockContainer=document.getElementById("block-container");
 
 const canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -34,7 +34,7 @@ class Obstruction {
     if (gameState) {
       var move = setInterval(() => {
         check();
-        if (!gameState) {clearInterval(move);    body.insertBefore(block,canvas);
+        if (!gameState) {clearInterval(move);    blockContainer.appendChild(block);
 
         } // ending a game when its over
         //code that clears they bitmap
@@ -181,7 +181,7 @@ function main() {
     set_score();
   }
   else{
-    body.insertBefore(block,canvas);
+    blockContainer.appendChild(block);
   }
 }
 
